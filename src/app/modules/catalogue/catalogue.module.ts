@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { CatalogueComponent } from './catalogue.component';
 import { CatalogueItemsComponent } from './components/catalogue-items/catalogue-items.component';
 import { CatalogueItemComponent } from './components/catalogue-item/catalogue-item.component';
+import { PreviewCardComponent } from '@pipes/ui';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,6 @@ import { CatalogueItemComponent } from './components/catalogue-item/catalogue-it
     CatalogueItemsComponent,
     CatalogueItemComponent,
   ],
-  imports: [CommonModule, CatalogueRoutingModule, RouterModule],
+  imports: [CommonModule, CatalogueRoutingModule, RouterModule, PreviewCardComponent],
 })
 export class CatalogueModule {}

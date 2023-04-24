@@ -1,0 +1,13 @@
+<article class="h-80 p-3 gap-2 rounded-lg bg-gray-900 flex flex-col items-start text-white transition-transform shadow-md
+                hover:scale-105">
+    <div class="basis-1/2 bg-white rounded-md w-full" [ngStyle]="{'background-image': 'url(' + image + ')'}"></div>
+    <h3>Alpha Hookah X</h3>
+    <div class="basis-1/4 overflow-hidden">
+        <p class="text-sm overflow-hidden webkit-box">{{desc}}</p>
+    </div>
+    <div class="w-full flex items-center justify-between">
+        <span>{{price}}</span>
+        <button class="rounded-md w-auto bg-white text-gray-900 pl-4 pr-4 pt-1 pb-1 border border-transparent
+                     hover:border-white hover:text-white hover:bg-gray-900">Buy</button>
+    </div>
+</article>

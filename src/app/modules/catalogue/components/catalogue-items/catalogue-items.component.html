@@ -1,1 +1,7 @@
-<p>catalogue-items works!</p>
+<section class="flex fle-wrap gap-3">
+   <pipes-preview-card *ngFor="let item of items" 
+                        [desc]="item.desc" 
+                        [title]="item.name" 
+                        [price]="item.price" 
+                        [image]="item.image"></pipes-preview-card>
+</section>

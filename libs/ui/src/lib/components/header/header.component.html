@@ -1,0 +1,6 @@
+<header class="w-screen shadow-md flex items-center justify-between h-16 pl-6 pr-6 bg-gray-900">
+    <a [routerLink]="''" class="text-3xl text-white font-bold">{{title}}</a>
+    <nav class="flex items-center gap-2 text-white">
+        <a *ngFor="let link of links" [routerLink]="link.route">{{link.name}}</a>
+    </nav>
+</header>
