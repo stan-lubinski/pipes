@@ -1,5 +1,14 @@
+:host {
+    flex-basis: 20%;
+    flex-shrink: 1;
+}
+
 .webkit-box {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+
+// .catalog-item {
+//     min-width: 10rem;
+// }
