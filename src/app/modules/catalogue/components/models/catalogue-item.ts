@@ -1,7 +1,7 @@
 export interface CatalogueItemModel {
-    image: string,
-    name: string,
-    desc: string,
-    price: string,
-    id: number
-  }
+  image: string;
+  name: string;
+  desc: string;
+  price: string;
+  id: number;
+}

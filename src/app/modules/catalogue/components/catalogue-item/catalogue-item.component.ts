@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CatalogueItemModel } from '../models/catalogue-item';
-import { CatalogueItemsService } from '../services/catalogue-items.service';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
+import { CatalogueItemModel } from '../models/catalogue-item';
+import { CatalogueItemsService } from '../services/catalogue-items.service';
 
 @Component({
   selector: 'pipes-catalogue-item',
@@ -15,11 +15,13 @@ export class CatalogueItemComponent {
   loading = false;
 
   get id(): number {
-    return +(this.route.snapshot.paramMap.get('id') || 0)
+    return +(this.route.snapshot.paramMap.get('id') || 0);
   }
 
-  constructor(private itemsService: CatalogueItemsService,
-              private route: ActivatedRoute) {}
+  constructor(
+    private itemsService: CatalogueItemsService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.getItem();
@@ -27,11 +29,18 @@ export class CatalogueItemComponent {
 
   private getItem(): void {
     this.loading = true;
-    
-    this.itemsService.getItem(this.id).pipe(finalize(() => {
-      this.loading = false;
-    })).subscribe({next: (res => {
-      this.item = res;
-    })})
+
+    this.itemsService
+      .getItem(this.id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.item = res;
+        },
+      });
   }
 }

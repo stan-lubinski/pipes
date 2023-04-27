@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { CatalogueItemsService } from '../services/catalogue-items.service';
-import { CatalogueItemModel } from '../models/catalogue-item';
 import { finalize } from 'rxjs';
-
+import { CatalogueItemModel } from '../models/catalogue-item';
+import { CatalogueItemsService } from '../services/catalogue-items.service';
 
 @Component({
   selector: 'pipes-catalogue-items',
@@ -22,11 +21,18 @@ export class CatalogueItemsComponent implements OnInit {
 
   private getItems(): void {
     this.loading = true;
-    
-    this.itemsService.getItems().pipe(finalize(() => {
-      this.loading = false;
-    })).subscribe({next: (res => {
-      this.items = res
-    })})
+
+    this.itemsService
+      .getItems()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.items = res;
+        },
+      });
   }
 }
