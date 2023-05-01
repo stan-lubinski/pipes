@@ -9,7 +9,8 @@ import { headerLinkModel } from '@pipes/ui';
 export class ShellComponent {
   title = 'Pipes';
   links: headerLinkModel[] = [
-    {route: '/catalogue', name: 'Catalogue'},
-    {route: '/tutorials', name: 'Tutorials'}
-  ]
+    { route: '/catalogue', name: 'Catalogue' },
+    { route: '/tutorials', name: 'Tutorials' },
+    { route: '/cart', name: 'Cart' },
+  ];
 }

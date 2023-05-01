@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs';
-import { CatalogueItemModel } from '../models/catalogue-item';
-import { CatalogueItemsService } from '../services/catalogue-items.service';
+import { CatalogueItemModel } from '../../models/catalogue-item';
+import { CatalogueItemsService } from '../../services/catalogue-items.service';
 
 @Component({
   selector: 'pipes-catalogue-items',

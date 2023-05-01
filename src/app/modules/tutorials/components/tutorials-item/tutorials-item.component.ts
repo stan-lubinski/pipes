@@ -1,4 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs';
+import { TutorialModel } from '../../models/tutorial';
+import { TutorialsService } from '../../services/tutorials.service';
 
 @Component({
   selector: 'pipes-tutorials-item',
@@ -6,4 +10,37 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./tutorials-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TutorialsItemComponent {}
+export class TutorialsItemComponent {
+  item!: TutorialModel | undefined;
+  loading = false;
+
+  get id(): number {
+    return +(this.route.snapshot.paramMap.get('id') || 0);
+  }
+
+  constructor(
+    private itemsService: TutorialsService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.getItem();
+  }
+
+  private getItem(): void {
+    this.loading = true;
+
+    this.itemsService
+      .getItem(this.id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.item = res;
+        },
+      });
+  }
+}
