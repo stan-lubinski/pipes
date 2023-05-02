@@ -3,4 +3,5 @@ export interface TutorialModel {
   id: number;
   content: string;
   desc: string;
+  img: string;
 }

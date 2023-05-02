@@ -1,0 +1,7 @@
+<section class="flex flex-col gap-3">
+  <pipes-tutorial-card *ngFor="let item of items"
+                       [title]="item.title"
+                       [desc]="item.desc"
+                       [img]="item.img">
+  </pipes-tutorial-card>
+</section>

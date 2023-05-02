@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'pipes-tutorial-card',
@@ -9,4 +9,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./tutorial-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TutorialCardComponent {}
+export class TutorialCardComponent {
+  @Input() title = '';
+  @Input() desc = '';
+  @Input() img = '';
+}

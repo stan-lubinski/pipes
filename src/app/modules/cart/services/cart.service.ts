@@ -24,18 +24,30 @@ export class CartService {
   constructor(private catalogueService: CatalogueItemsService) {}
 
   add(id: number): void {
-    this.catalogueService.getItem(id).subscribe({
-      next: (res) => {
-        if (res) {
-          this.items.push(res);
-          this.items$.next(this.items);
-        }
-      },
-    });
+    const existing = this.items.find((el) => el.id === id);
+    if (existing && existing.quantity) {
+      existing.quantity += 1;
+    } else {
+      this.catalogueService.getItem(id).subscribe({
+        next: (res) => {
+          if (res) {
+            res.quantity = 1;
+            this.items.push(res);
+            this.items$.next(this.items);
+          }
+        },
+      });
+    }
   }
 
   remove(id: number): void {
-    this.items = this.items.filter((el) => el.id !== id);
-    this.items$.next(this.items);
+    const item = this.items.find((el) => el.id === id);
+
+    if (item?.quantity && item.quantity > 1) {
+      item.quantity -= 1;
+    } else {
+      this.items = this.items.filter((el) => el.id !== id);
+      this.items$.next(this.items);
+    }
   }
 }

@@ -8,17 +8,17 @@ import { CatalogueItemModel } from '../models/catalogue-item';
 export class CatalogueItemsService {
   items: CatalogueItemModel[] = [
     {
-      name: 'Item name',
+      name: 'Alpha Hookah X',
       id: 1,
-      image: '',
+      image: '/assets/img/alpha-x.jpg',
       price: '100$',
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     },
     {
-      name: 'Item name',
-      id: 1,
-      image: '',
-      price: '100$',
+      name: 'Shishabucks Cloud Micro',
+      id: 2,
+      image: '/assets/img/shishabucks-cloud-micro-grey.jpg',
+      price: '189.99$',
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
     },
     {

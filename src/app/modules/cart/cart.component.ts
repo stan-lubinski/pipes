@@ -17,4 +17,16 @@ export class CartComponent implements OnInit {
       this.items = res;
     });
   }
+
+  incrQuantity(item: CatalogueItemModel): void {
+    if (item.quantity) {
+      item.quantity += 1;
+    }
+  }
+
+  decrQuantity(item: CatalogueItemModel): void {
+    if (item.quantity) {
+      item.quantity -= 1;
+    }
+  }
 }

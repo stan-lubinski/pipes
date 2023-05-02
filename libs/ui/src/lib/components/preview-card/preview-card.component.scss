@@ -1,12 +1,12 @@
 :host {
-    flex-basis: 20%;
-    flex-shrink: 1;
+  flex-basis: calc(100% / 3);
+  flex-shrink: 1;
 }
 
 .webkit-box {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 // .catalog-item {
