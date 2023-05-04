@@ -2,16 +2,19 @@
          *ngIf="items.length; else noItems">
   <div class="flex bg-neutral-200 p-3 gap-3"
        *ngFor="let item of items">
-    <div class="h-40 w-40 bg-white bg-cover bg-center"
+    <div class="h-40 w-40 shrink-0 bg-white bg-contain bg-no-repeat bg-center"
          [ngStyle]="{'background-image': 'url(' + item.image + ')'}"></div>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-3 justify-between w-full">
       <p class="text-2xl">{{item.name}}</p>
-      <div class="flex">
-        <button [disabled]="item.quantity === 5"
-                (click)="incrQuantity(item)">+</button>
-        <p class="text-xl">{{item.quantity}}</p>
-        <button [disabled]="item.quantity === 1"
-                (click)="decrQuantity(item)">-</button>
+      <div class="flex justify-between">
+        <div class="flex gap-1 text-xl">
+          <button [disabled]="item.quantity === 5"
+                  (click)="incrQuantity(item)">+</button>
+          <p>{{item.quantity}}</p>
+          <button [disabled]="item.quantity === 1"
+                  (click)="decrQuantity(item)">-</button>
+        </div>
+        <button (click)="remove(item.id)">Remove</button>
       </div>
     </div>
   </div>

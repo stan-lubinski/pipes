@@ -4,5 +4,6 @@
                        [name]="item.name"
                        [price]="item.price"
                        [id]="item.id"
-                       [image]="item.image"></pipes-preview-card>
+                       [image]="item.image"
+                       (action)="addToCart(item.id)"></pipes-preview-card>
 </section>

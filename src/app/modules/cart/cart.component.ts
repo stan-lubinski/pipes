@@ -14,6 +14,7 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.cartService.items$.subscribe((res) => {
+      console.log(res);
       this.items = res;
     });
   }
@@ -28,5 +29,9 @@ export class CartComponent implements OnInit {
     if (item.quantity) {
       item.quantity -= 1;
     }
+  }
+
+  remove(id: number) {
+    this.cartService.remove(id);
   }
 }

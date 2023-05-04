@@ -1,5 +1,5 @@
 <article class="catalog-item p-3 bg-neutral-200 flex flex-col items-start gap-2 transition-transform border-2 border-neutral-50">
-    <div class="h-80 bg-white w-full bg-cover bg-center"
+    <div class="h-80 bg-white w-full bg-contain bg-no-repeat bg-center"
          [ngStyle]="{'background-image': 'url(' + image + ')'}"></div>
     <h3 class="text-xl">{{name}}</h3>
     <!-- <div class="overflow-hidden">
@@ -7,8 +7,15 @@
     </div> -->
     <div class="w-full flex items-center justify-between">
         <span>{{price}}</span>
-        <button [routerLink]="[id]"
-                class="rounded-md w-auto bg-white text-gray-900 pl-4 pr-4 pt-1 pb-1 border border-transparent
-                     hover:border-white hover:text-white hover:bg-gray-900">Buy</button>
+        <div class="flex items-center gap-3">
+            <button [routerLink]="[id]"
+                    class="w-auto bg-white pl-4 pr-4 pt-1 pb-1 border border-transparent">
+                Details
+            </button>
+            <button (click)="onAction()"
+                    class="w-auto bg-white pl-4 pr-4 pt-1 pb-1 border border-transparent">
+                Add To Cart
+            </button>
+        </div>
     </div>
 </article>

@@ -1,5 +1,11 @@
 <main class="flex flex-col h-screen items-center w-screen bg-neutral-50">
-    <pipes-header [title]="title" [links]="links"></pipes-header>
+    <pipes-header [title]="title"
+                  [links]="links">
+        <a class="font-medium uppercase pl-3"
+           [routerLink]="['/cart']">Cart
+            <span *ngIf="cartItemCount">({{cartItemCount}})</span>
+        </a>
+    </pipes-header>
     <section class="m-3 p-3 w-8/12">
         <router-outlet></router-outlet>
     </section>

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -17,4 +23,9 @@ export class PreviewCardComponent {
     'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book';
   @Input() price = '100$';
   @Input() id: number | undefined;
+  @Output() action: EventEmitter<any> = new EventEmitter();
+
+  onAction(): void {
+    this.action.emit();
+  }
 }
