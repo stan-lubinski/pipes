@@ -8,11 +8,11 @@
       <p class="text-2xl">{{item.name}}</p>
       <div class="flex justify-between">
         <div class="flex gap-1 text-xl">
-          <button [disabled]="item.quantity === 5"
-                  (click)="incrQuantity(item)">+</button>
-          <p>{{item.quantity}}</p>
-          <button [disabled]="item.quantity === 1"
-                  (click)="decrQuantity(item)">-</button>
+          <button [disabled]="item.count === 5"
+                  (click)="addItem(item.id)">+</button>
+          <p>{{item.count}}</p>
+          <button [disabled]="item.count === 1"
+                  (click)="remove(item.id, true)">-</button>
         </div>
         <button (click)="remove(item.id)">Remove</button>
       </div>

@@ -1,53 +1,78 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { CatalogueItemModel } from '../../catalogue/models/catalogue-item';
+import { finalize, Observable, Subject } from 'rxjs';
 import { CatalogueItemsService } from '../../catalogue/services/catalogue-items.service';
+
+export interface cartItem {
+  id: number;
+  count: number;
+  image: string;
+  name: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  _items: CatalogueItemModel[] = [];
+  // _items: CatalogueItemModel[] = [];
 
-  get items(): CatalogueItemModel[] {
-    return this._items;
+  // get items(): CatalogueItemModel[] {
+  //   return this._items;
+  // }
+
+  // set items(items: CatalogueItemModel[]) {
+  //   this._items = items;
+  // }
+
+  // items$: BehaviorSubject<CatalogueItemModel[]> = new BehaviorSubject(
+  //   this._items
+  // );
+
+  update$: Subject<any> = new Subject();
+
+  constructor(
+    private catalogueService: CatalogueItemsService,
+    private http: HttpClient
+  ) {}
+
+  getCart(): Observable<any> {
+    return this.http.get('/cart');
   }
 
-  set items(items: CatalogueItemModel[]) {
-    this._items = items;
+  add(id: number): Observable<any> {
+    // const existing = this.items.find((el) => el.id === id);
+    // if (existing && existing.quantity) {
+    //   existing.quantity += 1;
+    // } else {
+    //   this.catalogueService.getItem(id).subscribe({
+    //     next: (res) => {
+    //       if (res) {
+    //         res.quantity = 1;
+    //         this.items.push(res);
+    //         this.items$.next(this.items);
+    //       }
+    //     },
+    //   });
+    // }
+
+    return this.http.post('/cart', { id, count: 1 }).pipe(
+      finalize(() => {
+        this.update$.next(true);
+      })
+    );
   }
 
-  items$: BehaviorSubject<CatalogueItemModel[]> = new BehaviorSubject(
-    this._items
-  );
+  remove(id: number, useCounter?: boolean): Observable<any> {
+    const params = {
+      body: {
+        useCounter,
+      },
+    };
 
-  constructor(private catalogueService: CatalogueItemsService) {}
-
-  add(id: number): void {
-    const existing = this.items.find((el) => el.id === id);
-    if (existing && existing.quantity) {
-      existing.quantity += 1;
-    } else {
-      this.catalogueService.getItem(id).subscribe({
-        next: (res) => {
-          if (res) {
-            res.quantity = 1;
-            this.items.push(res);
-            this.items$.next(this.items);
-          }
-        },
-      });
-    }
-  }
-
-  remove(id: number): void {
-    const item = this.items.find((el) => el.id === id);
-
-    if (item?.quantity && item.quantity > 1) {
-      item.quantity -= 1;
-    } else {
-      this.items = this.items.filter((el) => el.id !== id);
-      this.items$.next(this.items);
-    }
+    return this.http.delete(`/cart/${id}`, params).pipe(
+      finalize(() => {
+        this.update$.next(true);
+      })
+    );
   }
 }

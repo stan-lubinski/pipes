@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CatalogueItemModel } from '../catalogue/models/catalogue-item';
-import { CartService } from './services/cart.service';
+import { cartItem, CartService } from './services/cart.service';
 
 @Component({
   selector: 'pipes-cart',
@@ -8,14 +8,29 @@ import { CartService } from './services/cart.service';
   styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
-  items: CatalogueItemModel[] = [];
+  items: cartItem[] = [];
 
-  constructor(private cartService: CartService) {}
+  constructor(
+    private cartService: CartService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.cartService.items$.subscribe((res) => {
-      console.log(res);
-      this.items = res;
+    this.cartService.update$.subscribe({
+      next: () => {
+        this.cdRef.markForCheck();
+        this.getItems();
+      },
+    });
+    this.getItems();
+  }
+
+  getItems(): void {
+    this.cartService.getCart().subscribe({
+      next: (res) => {
+        this.items = res.data;
+        this.cdRef.markForCheck();
+      },
     });
   }
 
@@ -31,7 +46,18 @@ export class CartComponent implements OnInit {
     }
   }
 
-  remove(id: number) {
-    this.cartService.remove(id);
+  addItem(id: number) {
+    this.cartService.add(id).subscribe({ next: () => {} });
+  }
+
+  remove(id: number, count?: boolean) {
+    this.cartService
+      .remove(id, count)
+      .pipe()
+      .subscribe({
+        next: (res) => {
+          this.getItems();
+        },
+      });
   }
 }

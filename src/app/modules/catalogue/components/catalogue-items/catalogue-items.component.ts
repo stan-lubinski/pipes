@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
 import { CatalogueItemModel } from '../../models/catalogue-item';
 import { CatalogueItemsService } from '../../services/catalogue-items.service';
 
+@UntilDestroy()
 @Component({
   selector: 'pipes-catalogue-items',
   templateUrl: './catalogue-items.component.html',
@@ -18,7 +25,8 @@ export class CatalogueItemsComponent implements OnInit {
   constructor(
     private itemsService: CatalogueItemsService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -26,10 +34,10 @@ export class CatalogueItemsComponent implements OnInit {
   }
 
   addToCart(id: number): void {
-    if (!this.cartService.items.find((el) => el.id === id)) {
-      this.cartService.add(id);
-    }
-    this.router.navigate(['/cart']);
+    // if (!this.cartService.items.find((el) => el.id === id)) {
+    this.cartService.add(id).subscribe();
+    // }
+    // this.router.navigate(['/cart']);
   }
 
   private getItems(): void {
@@ -40,11 +48,13 @@ export class CatalogueItemsComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.loading = false;
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe({
         next: (res) => {
           this.items = res;
+          this.cdRef.markForCheck();
         },
       });
   }

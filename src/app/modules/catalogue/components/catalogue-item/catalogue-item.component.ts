@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
@@ -22,7 +27,8 @@ export class CatalogueItemComponent implements OnInit {
   constructor(
     private itemsService: CatalogueItemsService,
     private cartService: CartService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +40,7 @@ export class CatalogueItemComponent implements OnInit {
   }
 
   private getItem(): void {
+    console.log('getItem');
     this.loading = true;
 
     this.itemsService
@@ -46,6 +53,8 @@ export class CatalogueItemComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.item = res;
+          console.log(this.item);
+          this.cdRef.markForCheck();
         },
       });
   }

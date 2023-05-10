@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-
 import { RouterModule } from '@angular/router';
 import { PreviewCardComponent } from '@pipes/ui';
 import { CatalogueRoutingModule } from './catalogue-routing.module';
@@ -19,6 +19,7 @@ import { CatalogueItemsComponent } from './components/catalogue-items/catalogue-
     CatalogueRoutingModule,
     RouterModule,
     PreviewCardComponent,
+    HttpClientModule,
   ],
 })
 export class CatalogueModule {}
