@@ -1,13 +1,20 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { ShellRoutingModule } from './shell-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { ShellComponent } from './shell.component'
 import { HeaderComponent } from '@pipes/ui';
+import { ShellRoutingModule } from './shell-routing.module';
+import { ShellComponent } from './shell.component';
 
 @NgModule({
   declarations: [ShellComponent],
-  imports: [CommonModule, ShellRoutingModule, RouterModule, HeaderComponent],
+  imports: [
+    CommonModule,
+    ShellRoutingModule,
+    RouterModule,
+    HeaderComponent,
+    HttpClientModule,
+  ],
 })
 export class ShellModule {}

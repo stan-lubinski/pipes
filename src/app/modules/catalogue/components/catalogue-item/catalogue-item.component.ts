@@ -1,16 +1,24 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs';
-import { CatalogueItemModel } from '../models/catalogue-item';
-import { CatalogueItemsService } from '../services/catalogue-items.service';
+import { CartService } from 'src/app/modules/cart/services/cart.service';
+import { CatalogueItemModel } from '../../models/catalogue-item';
+import { CatalogueItemsService } from '../../services/catalogue-items.service';
 
+@UntilDestroy()
 @Component({
   selector: 'pipes-catalogue-item',
   templateUrl: './catalogue-item.component.html',
   styleUrls: ['./catalogue-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CatalogueItemComponent {
+export class CatalogueItemComponent implements OnInit {
   item!: CatalogueItemModel | undefined;
   loading = false;
 
@@ -20,14 +28,21 @@ export class CatalogueItemComponent {
 
   constructor(
     private itemsService: CatalogueItemsService,
-    private route: ActivatedRoute
+    private cartService: CartService,
+    private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.getItem();
   }
 
+  addToCart(): void {
+    this.cartService.add(this.id);
+  }
+
   private getItem(): void {
+    console.log('getItem');
     this.loading = true;
 
     this.itemsService
@@ -35,11 +50,14 @@ export class CatalogueItemComponent {
       .pipe(
         finalize(() => {
           this.loading = false;
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe({
         next: (res) => {
           this.item = res;
+          console.log(this.item);
+          this.cdRef.markForCheck();
         },
       });
   }

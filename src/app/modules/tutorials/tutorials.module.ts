@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
+import { RouterModule } from '@angular/router';
+import { TutorialCardComponent } from '@pipes/ui';
+import { TutorialsItemComponent } from './components/tutorials-item/tutorials-item.component';
+import { TutorialsItemsComponent } from './components/tutorials-items/tutorials-items.component';
 import { TutorialsRoutingModule } from './tutorials-routing.module';
 import { TutorialsComponent } from './tutorials.component';
-import { RouterModule } from '@angular/router';
-import { TutorialsItemsComponent } from './components/tutorials-items/tutorials-items.component';
-import { TutorialsItemComponent } from './components/tutorials-item/tutorials-item.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,11 @@ import { TutorialsItemComponent } from './components/tutorials-item/tutorials-it
     TutorialsItemsComponent,
     TutorialsItemComponent,
   ],
-  imports: [CommonModule, TutorialsRoutingModule, RouterModule],
+  imports: [
+    CommonModule,
+    TutorialsRoutingModule,
+    RouterModule,
+    TutorialCardComponent,
+  ],
 })
 export class TutorialsModule {}

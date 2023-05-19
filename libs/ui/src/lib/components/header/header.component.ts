@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 export interface headerLinkModel {
-  route: string,
-  name: string
+  route: string;
+  name: string;
 }
 
 @Component({
@@ -12,9 +12,15 @@ export interface headerLinkModel {
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [RouterModule, CommonModule]
+  imports: [RouterModule, CommonModule],
 })
 export class HeaderComponent {
   @Input() links: headerLinkModel[] = [];
   @Input() title = 'Title';
+  @Input() titleRoute = '';
+  @Output() toggle = new EventEmitter();
+
+  emitToggle() {
+    this.toggle.emit();
+  }
 }

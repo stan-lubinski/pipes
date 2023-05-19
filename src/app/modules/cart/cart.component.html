@@ -1,0 +1,14 @@
+<section class="flex flex-col h-full"
+         *ngIf="items.length; else noItems">
+  <pipes-cart-item-card *ngFor="let item of items"
+                        [item]="item"
+                        (decrease)="remove(item.id, true)"
+                        (increase)="addItem(item.id)"
+                        (remove)="remove(item.id)"></pipes-cart-item-card>
+  <pipes-button [dark]="true"
+                class="m-1 self-end"
+                [text]="'Buy'"></pipes-button>
+</section>
+<ng-template #noItems>
+  <p class="text-stone-800 text-xl mt-3 ml-1 dark:text-white">Cart is empty</p>
+</ng-template>

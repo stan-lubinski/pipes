@@ -1,8 +1,15 @@
-<header class="w-screen flex justify-center h-16 pl-6 pr-6">
-    <div class="w-8/12 flex items-center justify-between">
-        <a [routerLink]="''" class="text-3xl font-bold">{{title}}</a>
-        <nav class="flex items-center gap-3">
-            <a class="font-medium uppercase" *ngFor="let link of links" [routerLink]="link.route">{{link.name}}</a>
-        </nav>
+<header class="top-0 flex justify-center h-16 bg-white dark:bg-stone-800  dark:text-white">
+    <div class="w-full lg:w-10/12 xl:w-8/12 flex items-center justify-between border-b-2 border-stone-800 dark:border-white">
+        <a aria-label='home'
+           [routerLink]="titleRoute"
+           class="text-3xl font-bold uppercase">{{title}}</a>
+        <div class="flex items-center">
+            <nav class="flex items-center gap-3">
+                <a *ngFor="let link of links"
+                   [ariaLabel]="link.name"
+                   [routerLink]="link.route">{{link.name}}</a>
+            </nav>
+            <ng-content></ng-content>
+        </div>
     </div>
 </header>

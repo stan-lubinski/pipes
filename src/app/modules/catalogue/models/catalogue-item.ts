@@ -4,4 +4,5 @@ export interface CatalogueItemModel {
   desc: string;
   price: string;
   id: number;
+  quantity?: number;
 }
