@@ -7,11 +7,12 @@ import {
   Output,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'pipes-preview-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, ButtonComponent, RouterModule],
   templateUrl: './preview-card.component.html',
   styleUrls: ['./preview-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

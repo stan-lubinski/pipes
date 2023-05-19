@@ -8,24 +8,24 @@ const routes: Routes = [
     component: ShellComponent,
     children: [
       {
-        path: 'catalogue',
+        path: 'cart',
+        loadChildren: () =>
+          import('../cart/cart.module').then((m) => m.CartModule),
+      },
+      {
+        path: '',
         loadChildren: () =>
           import('../catalogue/catalogue.module').then(
             (m) => m.CatalogueModule
           ),
       },
-      {
-        path: 'tutorials',
-        loadChildren: () =>
-          import('../tutorials/tutorials.module').then(
-            (m) => m.TutorialsModule
-          ),
-      },
-      {
-        path: 'cart',
-        loadChildren: () =>
-          import('../cart/cart.module').then((m) => m.CartModule),
-      },
+      // {
+      //   path: 'tutorials',
+      //   loadChildren: () =>
+      //     import('../tutorials/tutorials.module').then(
+      //       (m) => m.TutorialsModule
+      //     ),
+      // },
     ],
   },
 ];

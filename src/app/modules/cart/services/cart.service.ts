@@ -40,21 +40,6 @@ export class CartService {
   }
 
   add(id: number): Observable<any> {
-    // const existing = this.items.find((el) => el.id === id);
-    // if (existing && existing.quantity) {
-    //   existing.quantity += 1;
-    // } else {
-    //   this.catalogueService.getItem(id).subscribe({
-    //     next: (res) => {
-    //       if (res) {
-    //         res.quantity = 1;
-    //         this.items.push(res);
-    //         this.items$.next(this.items);
-    //       }
-    //     },
-    //   });
-    // }
-
     return this.http.post('/cart', { id, count: 1 }).pipe(
       finalize(() => {
         this.update$.next(true);

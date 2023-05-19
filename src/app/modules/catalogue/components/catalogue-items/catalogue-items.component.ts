@@ -4,7 +4,6 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
@@ -25,7 +24,6 @@ export class CatalogueItemsComponent implements OnInit {
   constructor(
     private itemsService: CatalogueItemsService,
     private cartService: CartService,
-    private router: Router,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -34,10 +32,7 @@ export class CatalogueItemsComponent implements OnInit {
   }
 
   addToCart(id: number): void {
-    // if (!this.cartService.items.find((el) => el.id === id)) {
-    this.cartService.add(id).subscribe();
-    // }
-    // this.router.navigate(['/cart']);
+    this.cartService.add(id).pipe(untilDestroyed(this)).subscribe();
   }
 
   private getItems(): void {

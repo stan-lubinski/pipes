@@ -1,24 +1,14 @@
-<section class="flex flex-col gap-3"
+<section class="flex flex-col h-full"
          *ngIf="items.length; else noItems">
-  <div class="flex bg-neutral-200 p-3 gap-3"
-       *ngFor="let item of items">
-    <div class="h-40 w-40 shrink-0 bg-white bg-contain bg-no-repeat bg-center"
-         [ngStyle]="{'background-image': 'url(' + item.image + ')'}"></div>
-    <div class="flex flex-col gap-3 justify-between w-full">
-      <p class="text-2xl">{{item.name}}</p>
-      <div class="flex justify-between">
-        <div class="flex gap-1 text-xl">
-          <button [disabled]="item.count === 5"
-                  (click)="addItem(item.id)">+</button>
-          <p>{{item.count}}</p>
-          <button [disabled]="item.count === 1"
-                  (click)="remove(item.id, true)">-</button>
-        </div>
-        <button (click)="remove(item.id)">Remove</button>
-      </div>
-    </div>
-  </div>
+  <pipes-cart-item-card *ngFor="let item of items"
+                        [item]="item"
+                        (decrease)="remove(item.id, true)"
+                        (increase)="addItem(item.id)"
+                        (remove)="remove(item.id)"></pipes-cart-item-card>
+  <pipes-button [dark]="true"
+                class="m-1 self-end"
+                [text]="'Buy'"></pipes-button>
 </section>
 <ng-template #noItems>
-  <p>Cart is empty</p>
+  <p class="text-stone-800 text-xl mt-3 ml-1 dark:text-white">Cart is empty</p>
 </ng-template>

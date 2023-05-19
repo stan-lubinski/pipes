@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs';
 import { TutorialModel } from '../../models/tutorial';
 import { TutorialsService } from '../../services/tutorials.service';
 
+@UntilDestroy()
 @Component({
   selector: 'pipes-tutorials-item',
   templateUrl: './tutorials-item.component.html',
@@ -35,7 +37,8 @@ export class TutorialsItemComponent {
       .pipe(
         finalize(() => {
           this.loading = false;
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe({
         next: (res) => {

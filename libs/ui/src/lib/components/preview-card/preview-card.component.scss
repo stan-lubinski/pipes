@@ -1,6 +1,7 @@
 :host {
   flex-basis: calc(100% / 3);
   flex-shrink: 1;
+  color: white;
 }
 
 .webkit-box {
@@ -8,7 +9,3 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
-
-// .catalog-item {
-//     min-width: 10rem;
-// }

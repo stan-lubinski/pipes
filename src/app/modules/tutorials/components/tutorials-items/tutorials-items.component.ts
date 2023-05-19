@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs';
 import { TutorialModel } from '../../models/tutorial';
 import { TutorialsService } from '../../services/tutorials.service';
 
+@UntilDestroy()
 @Component({
   selector: 'pipes-tutorials-items',
   templateUrl: './tutorials-items.component.html',
@@ -27,7 +29,8 @@ export class TutorialsItemsComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.loading = false;
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe({
         next: (res) => {

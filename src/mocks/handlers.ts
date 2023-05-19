@@ -69,7 +69,7 @@ export const handlers = [
     const id = +req.params['id'];
 
     const cart: cartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
-    const item: cartItem | undefined = cart.find((el) => (el.id = id));
+    const item: cartItem | undefined = cart.find((el) => el.id === id);
     if (item) {
       if (useCounter && item.count > 1) {
         item.count -= 1;

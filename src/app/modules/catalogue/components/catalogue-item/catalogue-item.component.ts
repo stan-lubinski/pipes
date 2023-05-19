@@ -5,11 +5,13 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
 import { CatalogueItemModel } from '../../models/catalogue-item';
 import { CatalogueItemsService } from '../../services/catalogue-items.service';
 
+@UntilDestroy()
 @Component({
   selector: 'pipes-catalogue-item',
   templateUrl: './catalogue-item.component.html',
@@ -48,7 +50,8 @@ export class CatalogueItemComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.loading = false;
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe({
         next: (res) => {
