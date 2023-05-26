@@ -1,68 +1,96 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CatalogueItemModel } from '../catalogue/models/catalogue-item';
-import { cartItem, CartService } from './services/cart.service';
+import { ButtonComponent, CartItemCardComponent } from '@pipes/ui';
+import { BehaviorSubject, finalize } from 'rxjs';
+import { CartItemModel } from './models/cart';
+import { CartStorageService } from './services/cart-storage.service';
+import { CartService } from './services/cart.service';
 
 @UntilDestroy()
 @Component({
   selector: 'pipes-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    CartItemCardComponent,
+    ButtonComponent,
+  ],
 })
 export class CartComponent implements OnInit {
-  items: cartItem[] = [];
+  loading = false;
+  totalPrice = 0;
+
+  get items$(): BehaviorSubject<CartItemModel[] | null> {
+    return this.storageService.items$;
+  }
 
   constructor(
-    private cartService: CartService,
-    private cdRef: ChangeDetectorRef
+    private httpService: CartService,
+    private storageService: CartStorageService,
+    private cdRef: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.cartService.update$.pipe(untilDestroyed(this)).subscribe({
-      next: () => {
-        this.cdRef.markForCheck();
-        this.getItems();
-      },
-    });
+    this.listenToStorage();
     this.getItems();
   }
 
-  getItems(): void {
-    this.cartService
-      .getCart()
+  completePurchase(): void {
+    this.router.navigate(['/success']);
+    this.httpService.clear().pipe(untilDestroyed(this)).subscribe();
+  }
+
+  calcTotal(): void {
+    this.totalPrice = 0;
+    if (this.items$.getValue()) {
+      this.items$.getValue()?.forEach((el) => {
+        this.totalPrice += el.price * el.count;
+      });
+    }
+  }
+
+  addItem(id: number): void {
+    this.httpService
+      .add(id)
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: (res) => {
-          this.items = res.data;
-          this.cdRef.markForCheck();
-        },
+        next: () => this.getItems(),
       });
   }
 
-  incrQuantity(item: CatalogueItemModel): void {
-    if (item.quantity) {
-      item.quantity += 1;
-    }
-  }
-
-  decrQuantity(item: CatalogueItemModel): void {
-    if (item.quantity) {
-      item.quantity -= 1;
-    }
-  }
-
-  addItem(id: number) {
-    this.cartService.add(id).pipe(untilDestroyed(this)).subscribe();
-  }
-
-  remove(id: number, count?: boolean) {
-    this.cartService
+  remove(id: number, count?: boolean): void {
+    this.httpService
       .remove(id, count)
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: (res) => {
-          this.getItems();
-        },
+        next: () => this.getItems(),
       });
+  }
+
+  private listenToStorage(): void {
+    this.storageService.items$.pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.calcTotal();
+        this.cdRef.markForCheck();
+      },
+    });
+  }
+
+  private getItems(): void {
+    this.loading = true;
+    this.httpService
+      .getCart()
+      .pipe(
+        finalize(() => (this.loading = false)),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }

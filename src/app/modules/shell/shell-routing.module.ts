@@ -9,15 +9,30 @@ const routes: Routes = [
     children: [
       {
         path: 'cart',
-        loadChildren: () =>
-          import('../cart/cart.module').then((m) => m.CartModule),
+        loadComponent: () =>
+          import('../cart/cart.component').then((m) => m.CartComponent),
       },
       {
-        path: '',
+        path: 'catalog',
         loadChildren: () =>
           import('../catalogue/catalogue.module').then(
             (m) => m.CatalogueModule
           ),
+      },
+      {
+        path: '',
+        redirectTo: 'catalog',
+        pathMatch: 'full',
+      },
+      {
+        path: 'success',
+        loadComponent: () =>
+          import('@pipes/ui').then((m) => m.PurchaseCompleteComponent),
+      },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('@pipes/ui').then((m) => m.NotFoundComponent),
       },
       // {
       //   path: 'tutorials',

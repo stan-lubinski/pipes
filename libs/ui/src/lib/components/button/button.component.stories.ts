@@ -10,5 +10,8 @@ export const Primary = {
   render: (args: ButtonComponent) => ({
     props: args,
   }),
-  args: {},
+  args: {
+    text: 'Button',
+    disabled: false,
+  },
 };

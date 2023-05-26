@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { headerLinkModel } from '@pipes/ui';
-import { cartItem, CartService } from '../cart/services/cart.service';
+import { CartItemModel } from '../cart/models/cart';
+import { CartService } from '../cart/services/cart.service';
 
 @UntilDestroy()
 @Component({
@@ -36,9 +37,7 @@ export class ShellComponent implements OnInit {
   ngOnInit(): void {
     this.getCartSize();
     this.cartService.update$.pipe(untilDestroyed(this)).subscribe({
-      next: () => {
-        this.getCartSize();
-      },
+      next: () => this.getCartSize(),
     });
   }
 
@@ -47,11 +46,11 @@ export class ShellComponent implements OnInit {
     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
 
     if (cartItems.length) {
-      cartItems.forEach((el: cartItem) => {
+      cartItems.forEach((el: CartItemModel) => {
         this.cartSize += el.count;
       });
 
-      this.cdRef.markForCheck();
+      this.cdRef.detectChanges();
     }
   }
 

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 export interface headerLinkModel {
@@ -13,6 +19,7 @@ export interface headerLinkModel {
   styleUrls: ['./header.component.scss'],
   standalone: true,
   imports: [RouterModule, CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
   @Input() links: headerLinkModel[] = [];

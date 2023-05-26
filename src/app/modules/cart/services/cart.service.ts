@@ -1,47 +1,39 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { finalize, Observable, Subject } from 'rxjs';
-import { CatalogueItemsService } from '../../catalogue/services/catalogue-items.service';
-
-export interface cartItem {
-  id: number;
-  count: number;
-  image: string;
-  name: string;
-}
+import { inject, Injectable } from '@angular/core';
+import { map, Observable, Subject, tap } from 'rxjs';
+import { CartItemModel } from '../models/cart';
+import { CartStorageService } from './cart-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  // _items: CatalogueItemModel[] = [];
-
-  // get items(): CatalogueItemModel[] {
-  //   return this._items;
-  // }
-
-  // set items(items: CatalogueItemModel[]) {
-  //   this._items = items;
-  // }
-
-  // items$: BehaviorSubject<CatalogueItemModel[]> = new BehaviorSubject(
-  //   this._items
-  // );
-
   update$: Subject<any> = new Subject();
+  http = inject(HttpClient);
+  storage = inject(CartStorageService);
 
-  constructor(
-    private catalogueService: CatalogueItemsService,
-    private http: HttpClient
-  ) {}
-
-  getCart(): Observable<any> {
-    return this.http.get('/cart');
+  getCart(): Observable<CartItemModel[]> {
+    return this.http.get<{ data: CartItemModel[] }>('/cart').pipe(
+      map((res) => {
+        return res.data;
+      }),
+      tap((res) => {
+        this.update$.next(true);
+        this.storage.items$.next(res);
+      })
+    );
   }
 
   add(id: number): Observable<any> {
-    return this.http.post('/cart', { id, count: 1 }).pipe(
-      finalize(() => {
+    return this.http
+      .post('/cart', { id, count: 1 })
+      .pipe(tap(() => this.update$.next(true)));
+  }
+
+  clear(): Observable<any> {
+    return this.http.delete('/cart').pipe(
+      tap(() => {
+        this.storage.items$.next(null);
         this.update$.next(true);
       })
     );
@@ -54,10 +46,8 @@ export class CartService {
       },
     };
 
-    return this.http.delete(`/cart/${id}`, params).pipe(
-      finalize(() => {
-        this.update$.next(true);
-      })
-    );
+    return this.http
+      .delete(`/cart/${id}`, params)
+      .pipe(tap(() => this.update$.next(true)));
   }
 }

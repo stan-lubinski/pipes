@@ -1,7 +1,17 @@
 :host {
-  flex-basis: calc(100% / 3);
+  flex-basis: calc(100%);
   flex-shrink: 1;
   color: white;
+
+  // xl
+  @media (min-width: 1390px) {
+    flex-basis: calc(100% / 3);
+  }
+
+  // lg
+  @media (min-width: 768px) and (max-width: 1390px) {
+    flex-basis: calc(100% / 2);
+  }
 }
 
 .webkit-box {

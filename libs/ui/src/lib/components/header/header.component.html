@@ -1,7 +1,6 @@
-<header class="top-0 flex justify-center h-16 bg-white dark:bg-stone-800  dark:text-white">
-    <div class="w-full lg:w-10/12 xl:w-8/12 flex items-center justify-between border-b-2 border-stone-800 dark:border-white">
-        <a aria-label='home'
-           [routerLink]="titleRoute"
+<header class="flex justify-center h-16 bg-white text-stone-800 dark:bg-stone-800 dark:text-white">
+    <div class="w-full pr-3 pl-3 lg:p-0 md:p-0 lg:w-8/12 md:w-10/12 flex items-center justify-between border-b-2 border-stone-800 dark:border-white">
+        <a [routerLink]="titleRoute"
            class="text-3xl font-bold uppercase">{{title}}</a>
         <div class="flex items-center">
             <nav class="flex items-center gap-3">
