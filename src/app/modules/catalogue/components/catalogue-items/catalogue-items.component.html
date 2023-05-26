@@ -1,9 +1,10 @@
 <section class="flex flex-wrap">
-   <ng-container *ngIf="items">
-      <pipes-preview-card *ngFor="let item of items"
+   <ng-container *ngIf="items$ | async">
+      <pipes-preview-card *ngFor="let item of items$ | async"
                           [desc]="item.desc"
                           [name]="item.name"
                           [price]="item.price"
+                          [disableAction]="disabledBtn === item.id"
                           [id]="item.id"
                           [image]="item.image"
                           (action)="addToCart(item.id)"></pipes-preview-card>
@@ -11,7 +12,7 @@
    <ng-container *ngIf="loading">
       <p class="text-stone-800 text-xl mt-3 ml-1 dark:text-white">Loading</p>
    </ng-container>
-   <ng-container *ngIf="!loading && !items.length">
+   <ng-container *ngIf="!loading && !(items$ | async)">
       <p class="text-stone-800 text-xl mt-3 ml-1 dark:text-white">No items found</p>
    </ng-container>
 </section>

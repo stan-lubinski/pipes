@@ -1,14 +1,15 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
 import { CatalogueItemModel } from '../../models/catalogue-item';
+import { CatalogueItemsStorageService } from '../../services/catalogue-items-storage.service';
 import { CatalogueItemsService } from '../../services/catalogue-items.service';
 
 @UntilDestroy()
@@ -18,34 +19,49 @@ import { CatalogueItemsService } from '../../services/catalogue-items.service';
   styleUrls: ['./catalogue-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CatalogueItemComponent implements OnInit {
-  item!: CatalogueItemModel | undefined;
+export class CatalogueItemComponent implements OnInit, OnDestroy {
   loading = false;
+  disableAddBtn = false;
 
   get id(): number {
     return +(this.route.snapshot.paramMap.get('id') || 0);
   }
 
+  get item$(): BehaviorSubject<CatalogueItemModel | null> {
+    return this.storageService.item$;
+  }
+
   constructor(
-    private itemsService: CatalogueItemsService,
+    private storageService: CatalogueItemsStorageService,
+    private httpService: CatalogueItemsService,
     private cartService: CartService,
-    private route: ActivatedRoute,
-    private cdRef: ChangeDetectorRef
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.getItem();
   }
 
+  ngOnDestroy(): void {
+    this.storageService.item$.next(null);
+  }
+
   addToCart(): void {
-    this.cartService.add(this.id);
+    this.disableAddBtn = true;
+    this.cartService
+      .add(this.id)
+      .pipe(
+        finalize(() => (this.disableAddBtn = false)),
+        untilDestroyed(this)
+      )
+      .subscribe({ next: () => {}, error: (err) => {} }); // TODO: add toasts
   }
 
   private getItem(): void {
     console.log('getItem');
     this.loading = true;
 
-    this.itemsService
+    this.httpService
       .getItem(this.id)
       .pipe(
         finalize(() => {
@@ -53,12 +69,6 @@ export class CatalogueItemComponent implements OnInit {
         }),
         untilDestroyed(this)
       )
-      .subscribe({
-        next: (res) => {
-          this.item = res;
-          console.log(this.item);
-          this.cdRef.markForCheck();
-        },
-      });
+      .subscribe();
   }
 }

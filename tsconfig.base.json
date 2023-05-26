@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@pipes/helpers": ["libs/helpers/src/index.ts"],
       "@pipes/ui": ["libs/ui/src/index.ts"]
     }
   },

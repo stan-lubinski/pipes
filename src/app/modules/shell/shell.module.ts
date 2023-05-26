@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { ToastrComponent } from '@pipes/helpers';
 import { HeaderComponent } from '@pipes/ui';
 import { ShellRoutingModule } from './shell-routing.module';
 import { ShellComponent } from './shell.component';
@@ -15,6 +16,7 @@ import { ShellComponent } from './shell.component';
     RouterModule,
     HeaderComponent,
     HttpClientModule,
+    ToastrComponent,
   ],
 })
 export class ShellModule {}

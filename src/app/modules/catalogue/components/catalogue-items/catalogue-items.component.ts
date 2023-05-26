@@ -2,12 +2,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { finalize } from 'rxjs';
+import { ToastrService } from 'libs/helpers/src/lib/toastr/toastr.service';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
 import { CatalogueItemModel } from '../../models/catalogue-item';
+import { CatalogueItemsStorageService } from '../../services/catalogue-items-storage.service';
 import { CatalogueItemsService } from '../../services/catalogue-items.service';
 
 @UntilDestroy()
@@ -17,13 +20,19 @@ import { CatalogueItemsService } from '../../services/catalogue-items.service';
   styleUrls: ['./catalogue-items.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CatalogueItemsComponent implements OnInit {
-  items!: CatalogueItemModel[];
+export class CatalogueItemsComponent implements OnInit, OnDestroy {
   loading = false;
+  disabledBtn!: number | undefined;
+
+  get items$(): BehaviorSubject<CatalogueItemModel[] | null> {
+    return this.storageService.items$;
+  }
 
   constructor(
-    private itemsService: CatalogueItemsService,
+    private httpService: CatalogueItemsService,
+    private storageService: CatalogueItemsStorageService,
     private cartService: CartService,
+    private toastr: ToastrService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -31,26 +40,36 @@ export class CatalogueItemsComponent implements OnInit {
     this.getItems();
   }
 
+  ngOnDestroy(): void {
+    this.storageService.items$.next(null);
+  }
+
   addToCart(id: number): void {
-    this.cartService.add(id).pipe(untilDestroyed(this)).subscribe();
+    this.disabledBtn = id;
+    this.cartService
+      .add(id)
+      .pipe(
+        finalize(() => {
+          this.disabledBtn = undefined;
+          this.cdRef.markForCheck();
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe({
+        next: () => this.toastr.toast('Cart updated', 'success'),
+        error: (res) => this.toastr.toast(res.error.error, 'error'),
+      });
   }
 
   private getItems(): void {
     this.loading = true;
 
-    this.itemsService
+    this.httpService
       .getItems()
       .pipe(
-        finalize(() => {
-          this.loading = false;
-        }),
+        finalize(() => (this.loading = false)),
         untilDestroyed(this)
       )
-      .subscribe({
-        next: (res) => {
-          this.items = res;
-          this.cdRef.markForCheck();
-        },
-      });
+      .subscribe();
   }
 }

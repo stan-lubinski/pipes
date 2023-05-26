@@ -1,13 +1,17 @@
 <section class="flex flex-col h-full"
-         *ngIf="items.length; else noItems">
-  <pipes-cart-item-card *ngFor="let item of items"
+         *ngIf="(items$ | async)?.length; else noItems">
+  <pipes-cart-item-card *ngFor="let item of items$ | async"
                         [item]="item"
                         (decrease)="remove(item.id, true)"
                         (increase)="addItem(item.id)"
                         (remove)="remove(item.id)"></pipes-cart-item-card>
-  <pipes-button [dark]="true"
-                class="m-1 self-end"
-                [text]="'Buy'"></pipes-button>
+  <footer class="flex items-center justify-between p-1">
+    <span class="text-lg dark:text-white">Total: {{totalPrice}}$</span>
+    <pipes-button [dark]="true"
+                  (onAction)="completePurchase()"
+                  [text]="'Buy'"></pipes-button>
+  </footer>
+
 </section>
 <ng-template #noItems>
   <p class="text-stone-800 text-xl mt-3 ml-1 dark:text-white">Cart is empty</p>

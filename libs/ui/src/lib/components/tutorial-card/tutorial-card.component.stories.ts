@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/angular';
-import { TutorialCardComponent } from '../tutorial-card.component';
+import { TutorialCardComponent } from './tutorial-card.component';
 
 export default {
   title: 'TutorialCardComponent',
