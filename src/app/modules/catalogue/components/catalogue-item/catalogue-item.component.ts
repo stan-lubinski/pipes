@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ToastrService } from 'libs/helpers/src/lib/toastr/toastr.service';
 import { BehaviorSubject, finalize } from 'rxjs';
 import { CartService } from 'src/app/modules/cart/services/cart.service';
 import { CatalogueItemModel } from '../../models/catalogue-item';
@@ -22,6 +23,8 @@ import { CatalogueItemsService } from '../../services/catalogue-items.service';
 export class CatalogueItemComponent implements OnInit, OnDestroy {
   loading = false;
   disableAddBtn = false;
+  quantity = 1;
+  max = 5;
 
   get id(): number {
     return +(this.route.snapshot.paramMap.get('id') || 0);
@@ -35,7 +38,8 @@ export class CatalogueItemComponent implements OnInit, OnDestroy {
     private storageService: CatalogueItemsStorageService,
     private httpService: CatalogueItemsService,
     private cartService: CartService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -46,15 +50,41 @@ export class CatalogueItemComponent implements OnInit, OnDestroy {
     this.storageService.item$.next(null);
   }
 
+  increment(): void {
+    this.quantity += 1;
+  }
+
+  decrement(): void {
+    this.quantity -= 1;
+  }
+
   addToCart(): void {
     this.disableAddBtn = true;
     this.cartService
-      .add(this.id)
+      .add(this.id, this.quantity)
       .pipe(
         finalize(() => (this.disableAddBtn = false)),
         untilDestroyed(this)
       )
-      .subscribe({ next: () => {}, error: (err) => {} }); // TODO: add toasts
+      .subscribe({
+        next: (res) => {
+          if (res.overflow) {
+            this.toastr.toast(
+              `${
+                res.overflow > 1
+                  ? res.overflow + ' items were'
+                  : res.overflow + ' item was'
+              } not added because product has a limit of 5 per order`,
+              'info'
+            );
+          } else {
+            this.toastr.toast('Cart updated', 'success');
+          }
+        },
+        error: (err) => {
+          this.toastr.toast(err.error.error, 'error');
+        },
+      });
   }
 
   private getItem(): void {

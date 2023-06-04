@@ -54,13 +54,20 @@ export const handlers = [
       return res(
         ctx.status(422),
         ctx.json({
-          error: 'Max quantity reached',
+          error: 'Items have a limit of 5 per order',
         })
       );
     }
 
+    let overflow = 0;
+
     if (existingItem) {
-      existingItem.count += item.count;
+      if (existingItem.count + item.count > 5) {
+        overflow = existingItem.count + item.count - 5;
+        existingItem.count = 5;
+      } else {
+        existingItem.count += item.count;
+      }
       localStorage.setItem('cart', JSON.stringify(currentCart));
     } else {
       const newCart = [...currentCart, item];
@@ -71,6 +78,7 @@ export const handlers = [
       ctx.json({
         id: item.id,
         count: item.count,
+        overflow,
       })
     );
   }),
