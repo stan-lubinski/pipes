@@ -24,9 +24,9 @@ export class CartService {
     );
   }
 
-  add(id: number): Observable<any> {
+  add(id: number, count = 1): Observable<any> {
     return this.http
-      .post('/cart', { id, count: 1 })
+      .post('/cart', { id, count })
       .pipe(tap(() => this.update$.next(true)));
   }
 

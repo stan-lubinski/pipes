@@ -17,7 +17,6 @@ import { ButtonComponent } from '../button/button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItemCardComponent {
-  // TODO: add type
   @Input() item!: {
     name: string;
     image: string;
